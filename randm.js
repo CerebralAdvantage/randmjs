@@ -1,0 +1,79 @@
+/*
+  randm.js
+  A javascript PRNG copied from George Marsaglia's CMWC
+  (Complimentary Multiply with Carry) PRNG (ACM, April 2003)
+  static unsigned long Q[4096],c=362436;
+  unsigned long CMWC4096(void){
+  unsigned long long t, a=18782LL;
+  static unsigned long i=4095;
+  unsigned long x,r=0xfffffffe;
+     i=(i+1)&4095;
+     t=a*Q[i]+c;
+     c=(t>>32); x=t+c; if(x<c){x++;c++;}
+     return(Q[i]=r-x);
+  }
+*/
+
+  let uint32rnds = new Uint32Array(4100); // Q, c, x, r, i
+  uint32rnds[4096] = 362436;     // c
+  uint32rnds[4098] = 0xfffffffe; // r
+  uint32rnds[4099] = 4095;       // i
+  let seededRandm = false;
+
+  function Burn(millis) // churns for time amount (very random)
+  {
+    const c = 4096, x = 4097, r = 4098;
+    let t, a=18782;
+    let i = uint32rnds[4099];
+    let Tn, goal, z, tot;
+    tot = 0;
+    goal = Date.now() + millis;
+    while(Date.now() < goal)
+    {
+      i = (i+1) & 4095;                        // i=(i+1)&4095;
+      t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
+      uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32); 
+      uint32rnds[x] = t + uint32rnds[c];       // x=t+c; 
+      if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
+        uint32rnds[x]++;
+        uint32rnds[c]++;
+      }
+      uint32rnds[i] = uint32rnds[r] - uint32rnds[x]; // return(Q[i]=r-x);
+      tot++;
+    } // while
+    console.log(tot);
+  }
+
+  /*
+   *  This sets up the random "pool" with a very diverse population
+   *  of extremely hard-to-guess 32-bit unsigned integers. It takes
+   *  no parameters because it relies on a functioning millisecond
+   *  clock, and a human operator to run the program, without preseeding,
+   *  at a random 1000/th of a second.  (that's easy for most humans)
+   */
+  function ReallyRandomSeeding()
+  {
+    let z, r;
+    r = Date.now() % 500 + 1;  // This is a REALLY RANDOM value 1..500
+    for(z=0;z<4096;z++) uint32rnds[z] = Date.now() % 1000000; // fill array with ANY non-zero value
+    Burn(200);                 // this is about 0.2s
+    uint32rnds[4099] = 4095;   // reset the "i" pointer
+    Burn(r);
+    uint32rnds[4099] = 4095;   // reset the "i" pointer (again)
+    seededRandm = true;
+  }
+
+  function randm()
+  {
+    const c = 4096, x = 4097, r = 4098, i = 4099;
+    let z;
+    if (!seededRandm) // not seeded.  assumption: user wants a really random number
+    {
+      ReallyRandomSeeding();
+//      for(z=0;z<4096;z++)
+  //       console.log(uint32rnds[z]);
+    }
+
+  }
+
+  randm();
