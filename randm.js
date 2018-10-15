@@ -76,7 +76,7 @@
     for(let z=0;z<4096;z++) uint32rnds[z] = Date.now(); // fill array with ANY non-zero value
     Burn(200);                 // this is about 0.2s
     uint32rnds[4099] = 4095;   // reset the "i" pointer
-    Burn(r);
+    Burn(r);                   // 0.001s - 0.5s
     uint32rnds[4099] = 4095;   // reset the "i" pointer (again)
     seededRandm = true;
   }
