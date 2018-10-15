@@ -93,6 +93,12 @@
   }
   console.log(randm());
   console.log(randm());
-  console.log(randm());
-  console.log(randm());
+  console.log(Date.now());
+  let yy, zz, xx=0;
+  console.log("HEY!!!");
+  // 60,000,000 less than 1s on my box
+  yy = Date.now();
+  for(let z=0;z < 60000000; z++) xx = randm();
+  zz = Date.now();
+  console.log(zz-yy);
 
