@@ -23,11 +23,11 @@
   function randmGen()
   {
     const c = 4096, x = 4097, r = 4098;
-    let t, a=18782;
+    let t, a=18782; // These really should be 64-bit, but I modified the "c=" line to accomodate...
     let i = uint32rnds[4099];
     i = (i+1) & 4095;                        // i=(i+1)&4095;
     t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
-    uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32);
+    uint32rnds[c] = (t^(t>>32))& 0xffffffff; // c=(t>>32);
     uint32rnds[x] = t + uint32rnds[c];       // x=t+c;
     if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
       uint32rnds[x]++;
@@ -50,7 +50,7 @@
     {
       i = (i+1) & 4095;                        // i=(i+1)&4095;
       t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
-      uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32); 
+      uint32rnds[c] = (t^(t>>32))& 0xffffffff; // c=(t>>32); 
       uint32rnds[x] = t + uint32rnds[c];       // x=t+c; 
       if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
         uint32rnds[x]++;
@@ -74,7 +74,7 @@ console.log(tot); // comment this line for production
     {
       i = (i+1) & 4095;                        // i=(i+1)&4095;
       t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
-      uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32);
+      uint32rnds[c] = (t^(t>>32))& 0xffffffff; // c=(t>>32);
       uint32rnds[x] = t + uint32rnds[c];       // x=t+c;
       if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
         uint32rnds[x]++;
