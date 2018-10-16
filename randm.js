@@ -27,8 +27,8 @@
     let i = uint32rnds[4099];
     i = (i+1) & 4095;                        // i=(i+1)&4095;
     t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
-    uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32); 
-    uint32rnds[x] = t + uint32rnds[c];       // x=t+c; 
+    uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32);
+    uint32rnds[x] = t + uint32rnds[c];       // x=t+c;
     if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
       uint32rnds[x]++;
       uint32rnds[c]++;
@@ -61,7 +61,31 @@
     } // while
     uint32rnds[4099] = i;
     //console.log(tot);
-  }
+  } // Burn()
+
+  function Churn(reps) // churns a precise amount (for hashing, etc)
+  {
+    const c = 4096, x = 4097, r = 4098;
+    let t, a=18782;
+    let i = uint32rnds[4099];
+    let Tn, tot;
+    tot = 0;
+    while(tot < reps)
+    {
+      i = (i+1) & 4095;                        // i=(i+1)&4095;
+      t = a * uint32rnds[i] + uint32rnds[c];   // t=a*Q[i]+c;
+      uint32rnds[c] = (t|(t>>32))& 0xffffffff; // c=(t>>32);
+      uint32rnds[x] = t + uint32rnds[c];       // x=t+c;
+      if (uint32rnds[x]< uint32rnds[c]) {      // if(x<c){x++;c++;}
+        uint32rnds[x]++;
+        uint32rnds[c]++;
+      }
+      uint32rnds[i] = uint32rnds[r] - uint32rnds[x]; // return(Q[i]=r-x);
+      tot++;
+    } // while
+    uint32rnds[4099] = i;
+    //console.log(tot);
+  } // Churn()
 
   /*
    *  This sets up the random "pool" with a very diverse population
@@ -79,6 +103,7 @@
     Burn(r);                   // 0.001s - 0.5s
     uint32rnds[4099] = 4095;   // reset the "i" pointer (again)
     seededRandm = true;
+    // for(let z=0;z<4096;z++) console.log(uint32rnds[z]);
   }
 
   function randm()
@@ -86,8 +111,6 @@
     if (!seededRandm) // not seeded.  assumption: user wants a really random number
     {
       ReallyRandomSeeding();
-//      for(let z=0;z<4096;z++)
-//        console.log(uint32rnds[z]);
     }
     return randmGen();
   }
