@@ -60,7 +60,7 @@
       tot++;
     } // while
     uint32rnds[4099] = i;
-    //console.log(tot);
+console.log(tot); // comment this line for production
   } // Burn()
 
   function Churn(reps) // churns a precise amount (for hashing, etc)
@@ -114,14 +114,15 @@
     }
     return randmGen();
   }
-  console.log(randm());
-  console.log(randm());
-  console.log(Date.now());
   let yy, zz, xx=0;
-  console.log("HEY!!!");
+  //call first time to gen ReallyRandomSeed
+  console.log("in case you're wondering, this is how much work went into");
+  console.log("preparing the PRNG Really Random Seed.");
+  console.log("Note that it's different every time you run the program!");
+  randm();
   // 60,000,000 less than 1s on my box
   yy = Date.now();
   for(let z=0;z < 60000000; z++) xx = randm();
   zz = Date.now();
-  console.log(zz-yy);
+  console.log("called randm() 60,000,000 times in ", zz-yy, " milliseconds.");
 
