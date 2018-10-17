@@ -121,8 +121,10 @@ console.log(tot); // comment this line for production
   console.log("Note that it's different every time you run the program!");
   randm();
   // 60,000,000 less than 1s on my box
+  //for(let z=0;z < 60000000; z++) xx = randm();
   yy = Date.now();
-  for(let z=0;z < 60000000; z++) xx = randm();
+  for(let z=0;z < 10000; z++) xx = randm();
   zz = Date.now();
-  console.log("called randm() 60,000,000 times in ", zz-yy, " milliseconds.");
+  //console.log("called randm() 60,000,000 times in ", zz-yy, " milliseconds.");
+  console.log("called randm() 10,000 times in ", zz-yy, " milliseconds.");
 
